@@ -7,9 +7,9 @@ fn main() {
 
     let reader = BufReader::new(file);
 
-    let mut numbers: Vec<u16> = reader
+    let mut numbers: Vec<usize> = reader
         .lines()
-        .map(|line| line.unwrap().parse::<u16>().unwrap())
+        .map(|line| line.unwrap().parse::<usize>().unwrap())
         .collect();
 
     numbers.sort();
@@ -26,11 +26,11 @@ fn main() {
     println!("matching tripples: {:?} in {} nanoseconds", res, elapsed);
 }
 
-fn find_pairs(numbers: &[u16]) -> (u16, u16) {
+fn find_pairs<'a>(numbers: &'a [usize]) -> (&usize, &usize) {
     for (index, number) in numbers.iter().enumerate() {
         for possible_match in numbers.iter().skip(index) {
             if number + possible_match == 2020 {
-                return (*number, *possible_match);
+                return (number, possible_match);
             }
         }
     }
@@ -38,7 +38,7 @@ fn find_pairs(numbers: &[u16]) -> (u16, u16) {
     unreachable!();
 }
 
-fn find_tripples(numbers: &[u16]) -> (u16, u16, u16) {
+fn find_tripples<'a>(numbers: &'a [usize]) -> (&usize, &usize, &usize) {
     for (first_index, number) in numbers.iter().enumerate() {
         for (second_index, number_two) in numbers.iter().enumerate().skip(first_index) {
             if number + number_two >= 2020 {
@@ -49,7 +49,7 @@ fn find_tripples(numbers: &[u16]) -> (u16, u16, u16) {
                 .skip(std::cmp::max(first_index, second_index))
             {
                 if number + number_two + possible_match == 2020 {
-                    return (*number, *number_two, *possible_match);
+                    return (number, number_two, possible_match);
                 }
             }
         }
