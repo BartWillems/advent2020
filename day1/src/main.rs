@@ -44,7 +44,10 @@ fn find_tripples(numbers: &[u16]) -> (u16, u16, u16) {
             if number + number_two >= 2020 {
                 continue;
             }
-            for possible_match in numbers.iter().skip(second_index) {
+            for possible_match in numbers
+                .iter()
+                .skip(std::cmp::max(first_index, second_index))
+            {
                 if number + number_two + possible_match == 2020 {
                     return (*number, *number_two, *possible_match);
                 }
