@@ -12,21 +12,23 @@ fn main() {
         .map(|line| line.unwrap().parse::<usize>().unwrap())
         .collect();
 
-    numbers.sort();
+    let now = std::time::Instant::now();
+    numbers.sort_unstable();
+    println!("sorting took {} microseconds", now.elapsed().as_micros());
 
     let now = std::time::Instant::now();
-    let pair = find_pairs(&numbers);
+    let pair = part_one(&numbers);
     let elapsed = now.elapsed().as_nanos();
     println!("matching pair {:?} in {} nanoseconds", pair, elapsed);
 
     let now = std::time::Instant::now();
-    let res = find_tripples(&numbers);
+    let res = part_two(&numbers);
     let elapsed = now.elapsed().as_nanos();
 
     println!("matching tripples: {:?} in {} nanoseconds", res, elapsed);
 }
 
-fn find_pairs<'a>(numbers: &'a [usize]) -> (&usize, &usize) {
+fn part_one<'a>(numbers: &'a [usize]) -> (&usize, &usize) {
     for (index, number) in numbers.iter().enumerate() {
         for possible_match in numbers.iter().skip(index) {
             if number + possible_match == 2020 {
@@ -38,18 +40,18 @@ fn find_pairs<'a>(numbers: &'a [usize]) -> (&usize, &usize) {
     unreachable!();
 }
 
-fn find_tripples<'a>(numbers: &'a [usize]) -> (&usize, &usize, &usize) {
-    for (first_index, number) in numbers.iter().enumerate() {
-        for (second_index, number_two) in numbers.iter().enumerate().skip(first_index) {
-            if number + number_two >= 2020 {
+fn part_two<'a>(numbers: &'a [usize]) -> (&usize, &usize, &usize) {
+    for (first_index, one) in numbers.iter().enumerate() {
+        for (second_index, two) in numbers.iter().enumerate().skip(first_index) {
+            if one + two >= 2020 {
                 continue;
             }
-            for possible_match in numbers
+            for three in numbers
                 .iter()
                 .skip(std::cmp::max(first_index, second_index))
             {
-                if number + number_two + possible_match == 2020 {
-                    return (number, number_two, possible_match);
+                if one + two + three == 2020 {
+                    return (one, two, three);
                 }
             }
         }
