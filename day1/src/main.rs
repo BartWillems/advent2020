@@ -7,21 +7,23 @@ fn main() {
 
     let reader = BufReader::new(file);
 
-    let numbers: Vec<u16> = reader
+    let mut numbers: Vec<u16> = reader
         .lines()
         .map(|line| line.unwrap().parse::<u16>().unwrap())
         .collect();
 
+    numbers.sort();
+
     let now = std::time::Instant::now();
     let pair = find_pairs(&numbers);
-    let elapsed = now.elapsed().as_micros();
-    println!("matching pair {:?} in {} microseconds", pair, elapsed);
+    let elapsed = now.elapsed().as_nanos();
+    println!("matching pair {:?} in {} nanoseconds", pair, elapsed);
 
     let now = std::time::Instant::now();
     let res = find_tripples(&numbers);
-    let elapsed = now.elapsed().as_micros();
+    let elapsed = now.elapsed().as_nanos();
 
-    println!("matching tripples: {:?} in {} microseconds", res, elapsed);
+    println!("matching tripples: {:?} in {} nanoseconds", res, elapsed);
 }
 
 fn find_pairs(numbers: &[u16]) -> (u16, u16) {
