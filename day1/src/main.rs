@@ -46,10 +46,7 @@ fn part_two<'a>(numbers: &'a [usize]) -> (&usize, &usize, &usize) {
             if one + two >= 2020 {
                 continue;
             }
-            for three in numbers
-                .iter()
-                .skip(std::cmp::max(first_index, second_index))
-            {
+            for three in numbers.iter().skip(second_index) {
                 if one + two + three == 2020 {
                     return (one, two, three);
                 }
