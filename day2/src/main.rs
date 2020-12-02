@@ -70,11 +70,12 @@ fn main() {
     let lines: Vec<String> = reader.lines().map(|line| line.unwrap()).collect();
 
     let now = std::time::Instant::now();
-    let passwords: SmallVec<[Password; 1024]> = lines
-        .iter()
-        .map(|line| Password::from_string(line))
-        .collect();
-    let count = correct_password_count_part_one(&passwords);
+    let mut count = 0;
+    lines.iter().for_each(|line| {
+        if Password::from_string(line).is_valid_part_one() {
+            count += 1;
+        }
+    });
     let elapsed = now.elapsed();
 
     println!(
@@ -84,11 +85,12 @@ fn main() {
     );
 
     let now = std::time::Instant::now();
-    let passwords: SmallVec<[Password; 1024]> = lines
-        .iter()
-        .map(|line| Password::from_string(line))
-        .collect();
-    let count = correct_password_count_part_two(&passwords);
+    let mut count = 0;
+    lines.iter().for_each(|line| {
+        if Password::from_string(line).is_valid_part_two() {
+            count += 1;
+        }
+    });
     let elapsed = now.elapsed();
 
     println!(
@@ -96,28 +98,4 @@ fn main() {
         count,
         elapsed.as_micros()
     );
-}
-
-fn correct_password_count_part_one(passwords: &[Password]) -> u32 {
-    let mut count = 0;
-
-    for password in passwords {
-        if password.is_valid_part_one() {
-            count += 1;
-        }
-    }
-
-    count
-}
-
-fn correct_password_count_part_two(passwords: &[Password]) -> u32 {
-    let mut count = 0;
-
-    for password in passwords {
-        if password.is_valid_part_two() {
-            count += 1;
-        }
-    }
-
-    count
 }
