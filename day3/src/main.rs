@@ -23,7 +23,7 @@ impl From<char> for Tile {
         match tile {
             '.' => Tile::Open,
             '#' => Tile::Tree,
-            _ => unimplemented!(),
+            _ => unimplemented!("Tile is not implemented for char '{}'", tile),
         }
     }
 }
@@ -87,7 +87,12 @@ impl<'a> Traverser<'a> {
 
     #[inline]
     fn current_tile(&self) -> &Tile {
-        &self.forest.area[self.position.0][self.position.1]
+        unsafe {
+            self.forest
+                .area
+                .get_unchecked(self.position.0)
+                .get_unchecked(self.position.1)
+        }
     }
 
     #[inline]
