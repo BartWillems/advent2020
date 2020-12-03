@@ -3,6 +3,9 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::time::Instant;
 
+const WIDTH: usize = 31;
+const HEIGHT: usize = 323;
+
 fn read_lines() -> std::io::Result<Vec<String>> {
     let file = File::open("input.txt")?;
 
@@ -29,12 +32,12 @@ impl From<char> for Tile {
 }
 
 struct Forest {
-    area: [[Tile; 31]; 323],
+    area: [[Tile; WIDTH]; HEIGHT],
 }
 
 impl Forest {
     fn new(input: Vec<String>) -> Self {
-        let mut area: [[Tile; 31]; 323] = [[Tile::Open; 31]; 323];
+        let mut area: [[Tile; WIDTH]; HEIGHT] = [[Tile::Open; WIDTH]; HEIGHT];
 
         for (row, line) in input.iter().enumerate() {
             for (col, tile) in line.chars().enumerate() {
@@ -44,11 +47,6 @@ impl Forest {
 
         Forest { area }
     }
-}
-
-enum Direction {
-    Right,
-    Down,
 }
 
 struct Traverser<'a> {
@@ -91,50 +89,30 @@ impl<'a> Traverser<'a> {
             self.forest
                 .area
                 .get_unchecked(self.position.0)
-                .get_unchecked(self.position.1)
+                .get_unchecked(self.position.1 % WIDTH)
         }
     }
 
     #[inline]
     fn has_reached_bottom(&self) -> bool {
-        self.position.0 == self.forest.area.len() - 1
-    }
-
-    /// returns true if wen can still go down
-    #[inline]
-    fn walk(&mut self, direction: Direction) {
-        match direction {
-            Direction::Right => {
-                self.go_right();
-            }
-            Direction::Down => self.go_down(),
-        };
+        self.position.0 >= self.forest.area.len() - 1
     }
 
     #[inline]
-    fn go_right(&mut self) {
-        // wrap around at the end
-        if self.position.1 == 30 {
-            self.position.1 = 0
-        } else {
-            self.position.1 += 1;
-        }
+    fn go_right(&mut self, amount: usize) {
+        self.position.1 += amount;
     }
 
     #[inline]
-    fn go_down(&mut self) {
-        self.position.0 += 1;
+    fn go_down(&mut self, amount: usize) {
+        self.position.0 += amount;
     }
 
     #[inline]
     fn traverse(&mut self, right: usize, down: usize) -> usize {
         while !self.has_reached_bottom() {
-            for _i in 0..right {
-                self.walk(Direction::Right);
-            }
-            for _i in 0..down {
-                self.walk(Direction::Down);
-            }
+            self.go_right(right);
+            self.go_down(down);
 
             self.detect_tree();
         }
