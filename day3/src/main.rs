@@ -61,15 +61,15 @@ struct Traverser<'a> {
 
 impl<'a> Traverser<'a> {
     fn new(forest: &'a Forest) -> Self {
-        let mut part_one = Traverser {
+        let mut traverser = Traverser {
             forest,
             trees: 0,
             position: (0, 0),
         };
 
-        part_one.detect_tree();
+        traverser.detect_tree();
 
-        part_one
+        traverser
     }
 
     fn reset(&mut self) {
